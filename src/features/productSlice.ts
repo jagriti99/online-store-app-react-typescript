@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
 
+
 const api = "https://fakestoreapi.com/products"
 
 interface Product{
@@ -19,7 +20,8 @@ interface Product{
 }
 
 const initialState = {
-    products:[] as Product[]
+    products:[] as Product[],
+    cart:[] as Product[]
 }
 
 export const fetchProducts =createAsyncThunk(
@@ -34,12 +36,18 @@ export const fetchProducts =createAsyncThunk(
 export const productSlice = createSlice ({
     name:'product',
     initialState,
-    reducers:{},
+    reducers:{
+        addToCart:(state, action)=>{
+            state.cart=[...state.cart,action.payload]
+        }
+    },
     extraReducers(builder){
         builder.addCase(fetchProducts.fulfilled, (state,action: PayloadAction<Product[]>)=>{
             state.products = action.payload
         })
     }
 })
+
+export const {addToCart}=productSlice.actions
 
 export default productSlice.reducer
